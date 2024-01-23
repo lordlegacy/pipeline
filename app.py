@@ -38,10 +38,17 @@ def predict_api():
         # Decode the predicted 'Failure Type' using the LabelEncoder
         predicted_failure_type = label_encoder.inverse_transform(predictions[:, 1])
 
-        # Prepare the response
+        # Extract the first element from the lists
+        predicted_target = predictions[:, 0][0]
+        predicted_failure_type = predicted_failure_type[0]
+
+        # Map predicted_target to "ok" or "possible failure"
+        predicted_target_str = "ok" if predicted_target == 0 else "possible failure"
+
+        # Prepare the response with strings instead of lists
         response = {
-            'Predicted Target': predictions[:, 0].tolist(),
-            'Predicted Failure Type': predicted_failure_type.tolist()
+            'Predicted Target': predicted_target_str,
+            'Predicted Failure Type': predicted_failure_type
         }
 
         # Return the prediction as JSON response
